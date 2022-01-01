@@ -21,3 +21,5 @@ use Illuminate\Support\Facades\Route;
 Route::get('/auth/user', function (Request $request) {
     return $request->user();
 })->middleware('auth');
+
+Route::resource('/api/products', \App\Http\Controllers\ProductController::class)->only(['index']);
