@@ -12,4 +12,9 @@ class Product extends Model
     protected $fillable = [
         'name', 'description', 'price', 'quantity'
     ];
+
+    protected $casts = [
+        'price' => 'integer',
+        'quantity' => 'integer'
+    ];
 }
