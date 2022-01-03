@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Orders\OrderStoreRequest;
+use App\Http\Requests\Orders\OrderUpdateRequest;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -26,56 +30,41 @@ class OrderController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  Request  $request
-     * @return Response
+     * @param OrderStoreRequest $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(OrderStoreRequest $request)
     {
-        //
-    }
+        $product = Product::find($request->get('product_id'));
+        if($product->quantity < $request->get('quantity')) {
+            abort(403, 'Quantity exceeded!');
+        }
+        $order = new Order();
+        $order->user_id = Auth::id();
+        $order->product_id = $product->id;
+        $order->quantity = $request->get('quantity');
+        $order->price_at_buy = $product->price;
+        $order->status = 'placed';
+        $order->save();
+        $order->fresh();
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Order  $order
-     * @return Response
-     */
-    public function show(Order $order)
-    {
-        //
-    }
+        $new_order = Order::with(['user', 'product'])->find($order->id);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Order  $order
-     * @return Response
-     */
-    public function edit(Order $order)
-    {
-        //
+        return response()->json($new_order);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Order  $order
-     * @return Response
+     * @param OrderUpdateRequest $request
+     * @param Order $order
+     * @return JsonResponse
      */
-    public function update(Request $request, Order $order)
+    public function update(OrderUpdateRequest $request, Order $order)
     {
-        //
-    }
+        $order->status = $request->status;
+        $order->save();
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Order  $order
-     * @return Response
-     */
-    public function destroy(Order $order)
-    {
-        //
+        return response()->json($order);
     }
 }

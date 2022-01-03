@@ -4,8 +4,9 @@ namespace App\Http\Requests\Orders;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
-class OrderStoreRequest extends FormRequest
+class OrderUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,7 +15,7 @@ class OrderStoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::user()->hasRole('user');
+        return Auth::user()->hasRole('admin');
     }
 
     /**
@@ -25,8 +26,8 @@ class OrderStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'product_id' => ['required', 'integer', 'exists:products'],
-            'quantity' => ['required', 'integer', 'min:1']
+            'id' => ['required', 'integer', 'exists:products'],
+            'status' => ['required', 'string', Rule::in(['placed', 'confirmed', 'in_progress', 'waiting_for_transport', 'sent', 'delivered'])]
         ];
     }
 }
