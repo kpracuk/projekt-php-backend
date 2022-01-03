@@ -19,10 +19,20 @@ class DatabaseSeeder extends Seeder
     {
          User::create([
              'name' => 'Test User',
-             'email' => 'test@example.com',
+             'email' => 'user@example.com',
              'email_verified_at' => now(),
-             'password' => Hash::make('123123123')
+             'password' => Hash::make('123123123'),
+             'role' => 'user'
          ]);
+
+        User::create([
+            'name' => 'Test Admin',
+            'email' => 'admin@example.com',
+            'email_verified_at' => now(),
+            'password' => Hash::make('123123123'),
+            'role' => 'admin'
+        ]);
+
          User::factory(10)->create();
          Product::factory(20)->create();
          Order::factory(50)->create();

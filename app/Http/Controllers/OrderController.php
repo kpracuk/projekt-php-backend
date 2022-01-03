@@ -13,9 +13,13 @@ class OrderController extends Controller
      *
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-        $orders = Order::with(['user', 'product'])->get();
+        if($request->user()->hasRole('admin')) {
+            $orders = Order::with(['user', 'product'])->get();
+        } else {
+            $orders = $orders = Order::with(['user', 'product'])->where(['user_id' => $request->user()->id])->get();
+        }
         return response()->json($orders);
     }
 
