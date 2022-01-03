@@ -26,7 +26,6 @@ class OrderUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => ['required', 'integer', 'exists:products'],
             'status' => ['required', 'string', Rule::in(['placed', 'confirmed', 'in_progress', 'waiting_for_transport', 'sent', 'delivered'])]
         ];
     }

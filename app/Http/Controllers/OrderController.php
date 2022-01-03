@@ -65,6 +65,8 @@ class OrderController extends Controller
         $order->status = $request->status;
         $order->save();
 
-        return response()->json($order);
+        $new_order = Order::with(['user', 'product'])->find($order->id);
+
+        return response()->json($new_order);
     }
 }

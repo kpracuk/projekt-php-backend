@@ -23,4 +23,4 @@ Route::get('/auth/user', function (Request $request) {
 })->middleware('auth');
 
 Route::resource('/api/products', \App\Http\Controllers\ProductController::class)->only(['index']);
-Route::resource('/api/orders', \App\Http\Controllers\OrderController::class)->only(['index']);
+Route::resource('/api/orders', \App\Http\Controllers\OrderController::class)->only(['index', 'store', 'update']);
